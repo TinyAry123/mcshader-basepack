@@ -1,0 +1,27 @@
+#version 150
+
+uniform mat4  modelViewMatrix, projectionMatrix;
+uniform float viewWidth, viewHeight;
+uniform int   frameMod2;
+
+in vec4 vaColor;
+in vec3 vaPosition, vaNormal;
+
+out vec3 starColor, normal;
+
+#define TAA // Enable or disable TAA. 
+
+#ifdef TAA
+	#include "lib/TAA/TAAJitter.glsl"
+#endif
+
+void main() {
+	gl_Position = projectionMatrix * (modelViewMatrix * vec4(vaPosition, 1.0));
+
+	#ifdef TAA
+		gl_Position.xy = TAAJitter(gl_Position.xy, gl_Position.w);
+	#endif
+
+	starColor = vaColor.rgb;
+	normal    = vaNormal;
+}

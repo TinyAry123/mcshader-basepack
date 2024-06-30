@@ -23,7 +23,7 @@ Other notes:
        multiplications to find an optimised method of linearising the data. For L, it is 
        straight-forward as applying a cubic function will linearise it. For a and b, the linearisation
        is also to apply a cubic function, but there is an additional constant which is not relative with 
-       the L component, which is why you see here that the difference in L is multiplied by 0.01 to match
+       the L component, which is why you see here that the difference in L is multiplied by 0.078125 to match
        a similar average edge activation amount using just a and b. 
     3. Linearising all the OkLab color data here can be optimised if you rewrite the color before
        edge detection to be linearised, but i've found it less of a hassle to just code it this way. 
@@ -40,32 +40,32 @@ void SMAAEdgeDetection(out vec2 edges, sampler2D colorTex, vec2 uv, ivec2 screen
 
     currentColor = pow(texelFetch(colorTex, texelCoord + ivec2(-1,  0), 0).rgb, ivec3(3)); // Left texel. 
     difference   = abs(colorCenter - currentColor);
-    delta.x      = max(max(difference.r * 0.01, difference.g), difference.b);
+    delta.x      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
     currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 0, -1), 0).rgb, ivec3(3)); // Top texel. 
     difference   = abs(colorCenter - currentColor);
-    delta.y      = max(max(difference.r * 0.01, difference.g), difference.b);
+    delta.y      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
-    edges = step(0.0005, delta.xy);
+    edges = step(0.00048828125, delta.xy);
 
     if (edges.x + edges.y > 0.0) {
         currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 1,  0), 0).rgb, ivec3(3)); // Right texel. 
         difference   = abs(colorCenter - currentColor);
-        delta.z      = max(max(difference.r * 0.01, difference.g), difference.b);
+        delta.z      = max(max(difference.r * 0.0078125, difference.g), difference.b);
         
         currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 0,  1), 0).rgb, ivec3(3)); // Bottom texel. 
         difference   = abs(colorCenter - currentColor);
-        delta.w      = max(max(difference.r * 0.01, difference.g), difference.b);
+        delta.w      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
         vec2 maxDelta = max(delta.xy, delta.zw);
 
         currentColor = pow(texelFetch(colorTex, texelCoord + ivec2(-2,  0), 0).rgb, ivec3(3)); // Left x2 texel. 
         difference   = abs(colorCenter - currentColor);
-        delta.z      = max(max(difference.r * 0.01, difference.g), difference.b);
+        delta.z      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
         currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 0, -2), 0).rgb, ivec3(3)); // Top x2 texel. 
         difference   = abs(colorCenter - currentColor);
-        delta.w      = max(max(difference.r * 0.01, difference.g), difference.b);
+        delta.w      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
         maxDelta         = max(maxDelta.xy, delta.zw);
         float finalDelta = max(maxDelta.x, maxDelta.y);

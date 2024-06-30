@@ -6,6 +6,8 @@ SMAA implementation, these offsets were given in GLSL coordinate system and acco
 HLSL coordinate system in the blending weight calculation stage. Since we are doing the blending weight
 calculation in our GLSL coordinate system, these offsets will have to be in HLSL coordinates; so the 
 y offsets are inverted here. 
+
+TAAJitter requires a custom frameMod2 uniform, set in shaders.properties as well as viewWidth and viewHeight uniforms. 
 */
 
 const vec2 jitterOffsets[2] = vec2[2](

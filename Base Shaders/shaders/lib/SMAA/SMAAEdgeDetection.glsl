@@ -23,7 +23,7 @@ Other notes:
        multiplications to find an optimised method of linearising the data. For L, it is 
        straight-forward as applying a cubic function will linearise it. For a and b, the linearisation
        is also to apply a cubic function, but there is an additional constant which is not relative with 
-       the L component, which is why you see here that the difference in L is multiplied by 0.078125 to match
+       the L component, which is why you see here that the difference in L is multiplied by 0.0078125 to match
        a similar average edge activation amount using just a and b. 
     3. Linearising all the OkLab color data here can be optimised if you rewrite the color before
        edge detection to be linearised, but i've found it less of a hassle to just code it this way. 

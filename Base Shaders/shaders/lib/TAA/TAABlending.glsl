@@ -8,7 +8,7 @@ vec4 TAABlending(out vec4 temporalColor, sampler2D currentColorTex, sampler2D pr
     
     temporalColor = current;
 
-    float weight = min(sqrt(abs(current.a - previous.a)) * 15.0 + 0.5, 1.0);
+    float weight = min(sqrt(abs(current.a - previous.a)) * 16.0 + 0.5, 1.0);
 
     return mix(previous, current, weight);
 }

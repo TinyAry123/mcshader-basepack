@@ -1,5 +1,5 @@
-void CAS(inout vec3 color, sampler2D colorTex, vec2 uv, ivec2 screenRes) { // AMD FidelityFX Contrast Adaptive Sharpening (CAS), adapted for OkLab color space. 
-	ivec2 texelCoord = ivec2(floor(uv * screenRes));
+void CAS(inout vec3 color, sampler2D colorTex, vec2 uv, ivec2 screenSize) { // AMD FidelityFX Contrast Adaptive Sharpening (CAS), adapted for OkLab color space. 
+	ivec2 texelCoord = ivec2(floor(uv * screenSize));
 	
 	vec3 d = texelFetch(colorTex, texelCoord + ivec2(-1,  0), 0).rgb;
 	vec3 f = texelFetch(colorTex, texelCoord + ivec2( 1,  0), 0).rgb;

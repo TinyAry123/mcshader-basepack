@@ -141,7 +141,7 @@ vec2 SMAAArea(sampler2D areaTex, vec2 dist, float e1, float e2, float offset) {
 
 void SMAADetectHorizontalCornerPattern(sampler2D edgesTex, inout vec2 weights, vec3 coords, vec2 d, ivec2 screenSize) {
 	vec2 leftRight = step(d.xy, d.yx);
-	vec2 rounding  = 0.75 * leftRight;
+	vec2 rounding  = 0.5 * leftRight;
 	vec2 factor    = vec2(1.0);
 
 	if (leftRight.x + leftRight.y == 2.0) rounding /= 2.0;
@@ -155,7 +155,7 @@ void SMAADetectHorizontalCornerPattern(sampler2D edgesTex, inout vec2 weights, v
 
 void SMAADetectVerticalCornerPattern(sampler2D edgesTex, inout vec2 weights, vec3 coords, vec2 d, ivec2 screenSize) {
 	vec2 leftRight = step(d.xy, d.yx);
-	vec2 rounding  = 0.75 * leftRight;
+	vec2 rounding  = 0.5 * leftRight;
 	vec2 factor    = vec2(1.0);
 
 	if (leftRight.x + leftRight.y == 2.0) rounding /= 2.0;
@@ -163,6 +163,8 @@ void SMAADetectVerticalCornerPattern(sampler2D edgesTex, inout vec2 weights, vec
 	if (leftRight.x == 1.0) factor -= vec2(texture2D(edgesTex, coords.xy + ivec2( 1,  0) / vec2(screenSize)).y, texture2D(edgesTex, coords.xy + ivec2(-2,  0) / vec2(screenSize)).y);
 
 	if (leftRight.y == 1.0) factor -= vec2(texture2D(edgesTex, coords.xz + ivec2( 1,  1) / vec2(screenSize)).y, texture2D(edgesTex, coords.xz + ivec2(-2,  1) / vec2(screenSize)).y);
+
+	weights *= clamp(factor, 0.0, 1.0);
 }
 
 void SMAABlendingWeightCalculation(out vec4 weights, sampler2D edgesTex, sampler2D areaTex, sampler2D searchTex, bool useTAA, int frameMod2, vec2 uv, ivec2 screenSize) {

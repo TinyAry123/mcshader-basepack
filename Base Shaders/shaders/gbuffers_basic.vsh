@@ -27,5 +27,5 @@ void main() {
 
 	tint       = vaColor;
 	normal     = vaNormal;
-	uvLightMap = (vaUV2 / 8.0) / 256.0;
+	uvLightMap = (vaUV2 + 8.0) / 256.0;
 }

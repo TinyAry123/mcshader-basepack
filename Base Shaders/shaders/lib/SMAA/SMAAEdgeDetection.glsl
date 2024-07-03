@@ -71,5 +71,5 @@ void SMAAEdgeDetection(out vec2 edges, sampler2D colorTex, vec2 uv, ivec2 screen
         float finalDelta = max(maxDelta.x, maxDelta.y);
 
         edges = step(finalDelta, 2.0 * delta.xy);
-    } else edges = vec2(0.0);
+    }
 }

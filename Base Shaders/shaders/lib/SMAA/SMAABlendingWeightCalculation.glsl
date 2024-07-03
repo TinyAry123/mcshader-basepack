@@ -84,7 +84,7 @@ vec2 SMAACalculateDiagonalWeights(sampler2D edgesTex, sampler2D areaTex, vec2 uv
 }
 
 float SMAASearchLength(sampler2D searchTex, vec2 e, float offset) {
-	return texture2D(searchTex, vec2(0.5, -2.0) * e + vec2(1.03125 * offset + 0.0078125, 2.03125)).x;
+	return texelFetch(searchTex, ivec2(floor(vec2(32.0, -32.0) * e + vec2(66.0 * offset + 0.5, 32.5))), 0).x;
 }
 
 float SMAASearchXLeft(sampler2D edgesTex, sampler2D searchTex, vec2 uv, float end, ivec2 screenSize) {

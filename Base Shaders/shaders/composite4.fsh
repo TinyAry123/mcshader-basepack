@@ -4,6 +4,7 @@
 
 uniform sampler2D colortex0, colortex3, colortex4;
 uniform float     viewWidth, viewHeight;
+uniform int       frameMod2;
 
 in vec2 uv;
 
@@ -22,7 +23,7 @@ ivec2 screenSize = ivec2(viewWidth, viewHeight);
 void main() {
     #ifdef TAA
         vec4 temporalColor;
-        vec4 color = TAABlending(temporalColor, colortex0, colortex3, colortex4, uv, screenSize);
+        vec4 color = TAABlending(temporalColor, colortex0, colortex3, colortex4, frameMod2, uv, screenSize);
 
         colortex0Out = color;
         colortex3Out = temporalColor;

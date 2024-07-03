@@ -44,7 +44,6 @@ void TAAFetchPreviousPixelsCatmullRom(out vec4 previous1, out vec4 previous2, sa
         vec4 color11 = texelFetch(previousColorTex, xy00 + ivec2(1, 1), 0);
         vec4 color12 = texelFetch(previousColorTex, xy00 + ivec2(1, 2), 0);
         vec4 color13 = texelFetch(previousColorTex, xy00 + ivec2(1, 3), 0);
-        vec4 color14 = texelFetch(previousColorTex, xy00 + ivec2(1, 4), 0);
         vec4 color20 = texelFetch(previousColorTex, xy00 + ivec2(2, 0), 0);
         vec4 color21 = texelFetch(previousColorTex, xy00 + ivec2(2, 1), 0);
         vec4 color22 = texelFetch(previousColorTex, xy00 + ivec2(2, 2), 0);

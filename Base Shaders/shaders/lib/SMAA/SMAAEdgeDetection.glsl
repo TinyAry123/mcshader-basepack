@@ -38,32 +38,32 @@ void SMAAEdgeDetection(out vec2 edges, sampler2D colorTex, vec2 uv, ivec2 screen
 
     vec3 colorCenter = pow(texelFetch(colorTex, texelCoord, 0).rgb, ivec3(3));
 
-    currentColor = pow(texelFetch(colorTex, texelCoord + ivec2(-1,  0), 0).rgb, ivec3(3)); // Left texel. 
+    currentColor = pow(texelFetchOffset(colorTex, texelCoord, 0, ivec2(-1,  0)).rgb, ivec3(3)); // Left texel. 
     difference   = abs(colorCenter - currentColor);
     delta.x      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
-    currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 0, -1), 0).rgb, ivec3(3)); // Top texel. 
+    currentColor = pow(texelFetchOffset(colorTex, texelCoord, 0, ivec2( 0, -1)).rgb, ivec3(3)); // Top texel. 
     difference   = abs(colorCenter - currentColor);
     delta.y      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
     edges = step(0.00048828125, delta.xy);
 
     if (edges.x + edges.y > 0.0) {
-        currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 1,  0), 0).rgb, ivec3(3)); // Right texel. 
+        currentColor = pow(texelFetchOffset(colorTex, texelCoord, 0, ivec2( 1,  0)).rgb, ivec3(3)); // Right texel. 
         difference   = abs(colorCenter - currentColor);
         delta.z      = max(max(difference.r * 0.0078125, difference.g), difference.b);
         
-        currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 0,  1), 0).rgb, ivec3(3)); // Bottom texel. 
+        currentColor = pow(texelFetchOffset(colorTex, texelCoord, 0, ivec2( 0,  1)).rgb, ivec3(3)); // Bottom texel. 
         difference   = abs(colorCenter - currentColor);
         delta.w      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
         vec2 maxDelta = max(delta.xy, delta.zw);
 
-        currentColor = pow(texelFetch(colorTex, texelCoord + ivec2(-2,  0), 0).rgb, ivec3(3)); // Left x2 texel. 
+        currentColor = pow(texelFetchOffset(colorTex, texelCoord, 0, ivec2(-2,  0)).rgb, ivec3(3)); // Left x2 texel. 
         difference   = abs(colorCenter - currentColor);
         delta.z      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 
-        currentColor = pow(texelFetch(colorTex, texelCoord + ivec2( 0, -2), 0).rgb, ivec3(3)); // Top x2 texel. 
+        currentColor = pow(texelFetchOffset(colorTex, texelCoord, 0, ivec2( 0, -2)).rgb, ivec3(3)); // Top x2 texel. 
         difference   = abs(colorCenter - currentColor);
         delta.w      = max(max(difference.r * 0.0078125, difference.g), difference.b);
 

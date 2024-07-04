@@ -65,7 +65,7 @@ vec2 SMAACalculateDiagonalWeights(sampler2D edgesTex, sampler2D areaTex, vec2 uv
 
 	d.xz = SMAASearchDiagonal2(edgesTex, uv, vec2(-1.0, -1.0), end, screenSize);
 
-	if (texelFetch(edgesTex, texelCoord + ivec2( 1,  0), 0).x > 0.0) {
+	if (texelFetchOffset(edgesTex, texelCoord, 0, ivec2( 1,  0)).x > 0.0) {
 		d.yw =  SMAASearchDiagonal2(edgesTex, uv, vec2( 1.0,  1.0), end, screenSize);
 		d.y  += float(end.y > 0.9);
 	} else d.yw = vec2(0.0);

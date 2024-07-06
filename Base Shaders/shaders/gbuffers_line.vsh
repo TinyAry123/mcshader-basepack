@@ -42,7 +42,7 @@ void main() {
 	gl_Position = vec4((startNDC + vec3(lineOffset, 0.0)) * lineStartPosition.w, lineStartPosition.w);
 
 	#ifdef TAA
-		gl_Position.xy = TAAJitter(gl_Position.xy, gl_Position.w);
+		TAAJitter(gl_Position.xy, gl_Position.w, frameMod2, screenSize);
 	#endif
 
 	tint   = vaColor;

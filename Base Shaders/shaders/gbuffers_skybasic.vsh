@@ -15,11 +15,13 @@ out vec3 starColor, normal;
 	#include "lib/TAA/TAAJitter.glsl"
 #endif
 
+ivec2 screenSize = ivec2(viewWidth, viewHeight);
+
 void main() {
 	gl_Position = projectionMatrix * (modelViewMatrix * vec4(vaPosition, 1.0));
 
 	#ifdef TAA
-		gl_Position.xy = TAAJitter(gl_Position.xy, gl_Position.w);
+		TAAJitter(gl_Position.xy, gl_Position.w, frameMod2, screenSize);
 	#endif
 
 	starColor = vaColor.rgb;

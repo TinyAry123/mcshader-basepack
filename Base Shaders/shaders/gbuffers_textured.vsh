@@ -1,6 +1,7 @@
 #version 150
 
 uniform mat4  modelViewMatrix, projectionMatrix;
+uniform vec3  chunkOffset;
 uniform float viewWidth, viewHeight;
 uniform int   frameMod2;
 
@@ -22,7 +23,7 @@ out vec2 uv, uvLightMap;
 ivec2 screenSize = ivec2(viewWidth, viewHeight);
 
 void main() {
-	gl_Position = projectionMatrix * (modelViewMatrix * vec4(vaPosition, 1.0));
+	gl_Position = projectionMatrix * (modelViewMatrix * vec4(vaPosition + chunkOffset, 1.0));
 
 	#ifdef TAA
 		TAAJitter(gl_Position.xy, gl_Position.w, frameMod2, screenSize);

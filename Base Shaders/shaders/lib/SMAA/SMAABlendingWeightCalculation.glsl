@@ -139,34 +139,6 @@ vec2 SMAAArea(sampler2D areaTex, vec2 dist, float e1, float e2, float offset) {
 	return texture2D(areaTex, (16.0 * floor(4.0 * vec2(e1, e2) + 0.5) + dist + 0.5) / vec2(160.0, 560.0) + vec2(0.0, offset / 7.0)).xy;
 }
 
-void SMAADetectHorizontalCornerPattern(sampler2D edgesTex, inout vec2 weights, vec3 coords, vec2 d, ivec2 screenSize) {
-	vec2 leftRight = step(d.xy, d.yx);
-	vec2 rounding  = 0.5 * leftRight;
-	vec2 factor    = vec2(1.0);
-
-	if (leftRight.x + leftRight.y == 2.0) rounding /= 2.0;
-
-	if (leftRight.x == 1.0) factor -= vec2(texture2D(edgesTex, coords.xy + ivec2( 0,  1) / vec2(screenSize)).x, texture2D(edgesTex, coords.xy + ivec2( 0, -2) / vec2(screenSize)).x);
-
-	if (leftRight.y == 1.0) factor -= vec2(texture2D(edgesTex, coords.zy + ivec2( 1,  1) / vec2(screenSize)).x, texture2D(edgesTex, coords.zy + ivec2( 1, -2) / vec2(screenSize)).x);
-	
-	weights *= clamp(factor, 0.0, 1.0);
-}
-
-void SMAADetectVerticalCornerPattern(sampler2D edgesTex, inout vec2 weights, vec3 coords, vec2 d, ivec2 screenSize) {
-	vec2 leftRight = step(d.xy, d.yx);
-	vec2 rounding  = 0.5 * leftRight;
-	vec2 factor    = vec2(1.0);
-
-	if (leftRight.x + leftRight.y == 2.0) rounding /= 2.0;
-
-	if (leftRight.x == 1.0) factor -= vec2(texture2D(edgesTex, coords.xy + ivec2( 1,  0) / vec2(screenSize)).y, texture2D(edgesTex, coords.xy + ivec2(-2,  0) / vec2(screenSize)).y);
-
-	if (leftRight.y == 1.0) factor -= vec2(texture2D(edgesTex, coords.xz + ivec2( 1,  1) / vec2(screenSize)).y, texture2D(edgesTex, coords.xz + ivec2(-2,  1) / vec2(screenSize)).y);
-
-	weights *= clamp(factor, 0.0, 1.0);
-}
-
 void SMAABlendingWeightCalculation(out vec4 weights, sampler2D edgesTex, sampler2D areaTex, sampler2D searchTex, bool useTAA, int frameMod2, vec2 uv, ivec2 screenSize) {
 	ivec2 texelCoord       = ivec2(floor(uv * screenSize));
 	ivec4 subsampleIndices = useTAA ? (bool(frameMod2) ? ivec4(2, 2, 2, 0) : ivec4(1, 1, 1, 0)) : ivec4(0);
@@ -183,24 +155,14 @@ void SMAABlendingWeightCalculation(out vec4 weights, sampler2D edgesTex, sampler
 
 		if (weights.x == -weights.y) {
 			vec3 coords = vec3(SMAASearchXLeft(edgesTex, searchTex, offsets[0].xy, offsets[2].x, screenSize), offsets[1].y, SMAASearchXRight(edgesTex, searchTex, offsets[0].zw, offsets[2].y, screenSize));
-			
-			vec2 d = abs(floor(screenSize.xx * (coords.xz - uv.xx) + 0.5));
 
-			weights.xy = SMAAArea(areaTex, sqrt(d), texture2D(edgesTex, coords.xy).x, texture2D(edgesTex, coords.zy + ivec2( 1,  0) / vec2(screenSize)).x, float(subsampleIndices.y));
-
-			coords.y = uv.y;
-			SMAADetectHorizontalCornerPattern(edgesTex, weights.xy, coords, d, screenSize);
+			weights.xy = SMAAArea(areaTex, sqrt(abs(floor(screenSize.xx * (coords.xz - uv.xx) + 0.5))), texture2D(edgesTex, coords.xy).x, texture2D(edgesTex, coords.zy + ivec2( 1,  0) / vec2(screenSize)).x, float(subsampleIndices.y));
 		} else e.x = 0.0;
 	} else weights.xy = vec2(0.0);
 
 	if (e.x > 0.0) {
 		vec3 coords = vec3(offsets[0].x, SMAASearchYUp(edgesTex, searchTex, offsets[1].xy, offsets[2].z, screenSize), SMAASearchYDown(edgesTex, searchTex, offsets[1].zw, offsets[2].w, screenSize));
 
-		vec2 d = abs(floor(screenSize.yy * (coords.yz - uv.yy) + 0.5));
-
-		weights.zw = SMAAArea(areaTex, sqrt(d), texture2D(edgesTex, coords.xy).y, texture2D(edgesTex, coords.xz + ivec2( 0,  1) / vec2(screenSize)).y, float(subsampleIndices.x));
-
-		coords.x = uv.x;
-		SMAADetectVerticalCornerPattern(edgesTex, weights.zw, coords, d, screenSize);
+		weights.zw = SMAAArea(areaTex, sqrt(abs(floor(screenSize.yy * (coords.yz - uv.yy) + 0.5))), texture2D(edgesTex, coords.xy).y, texture2D(edgesTex, coords.xz + ivec2( 0,  1) / vec2(screenSize)).y, float(subsampleIndices.x));
 	} else weights.zw = vec2(0.0);
 }

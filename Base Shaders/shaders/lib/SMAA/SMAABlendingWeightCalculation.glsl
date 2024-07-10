@@ -3,7 +3,7 @@ vec2 SMAASearchDiagonal1(sampler2D edgesTex, vec2 uv, vec2 direction, out vec2 e
 	float edgeWeight = 1.0;
 	int searchStep   = -1;
 
-	while (searchStep < 15 && edgeWeight > 0.9) {
+	while (searchStep < 180 && edgeWeight > 0.9) {
 		searchStep++;
 		texelCoord += ivec2(direction);
 
@@ -20,7 +20,7 @@ vec2 SMAASearchDiagonal2(sampler2D edgesTex, vec2 uv, vec2 direction, out vec2 e
 	int searchStep   =  -1;
 	uv.x             += 0.25 / screenSize.x;
 
-	while (searchStep < 15 && edgeWeight > 0.9) {
+	while (searchStep < 180 && edgeWeight > 0.9) {
 		searchStep++;
 		uv += direction / screenSize;
 
@@ -146,7 +146,7 @@ void SMAABlendingWeightCalculation(out vec4 weights, sampler2D edgesTex, sampler
 
 	offsets[0] = uv.xyxy + vec4(-0.250, -0.125,  1.250, -0.125) / screenSize.xyxy;
 	offsets[1] = uv.xyxy + vec4(-0.125, -0.250, -0.125,  1.250) / screenSize.xyxy;
-	offsets[2] = vec4(offsets[0].xz, offsets[1].yw) + vec4(-64.0, 64.0, -64.0, 64.0) / screenSize.xxyy;
+	offsets[2] = vec4(offsets[0].xz, offsets[1].yw) + vec4(-256.0, 256.0, -256.0, 256.0) / screenSize.xxyy;
 
 	vec2 e = texelFetch(edgesTex, texelCoord, 0).xy;
 
